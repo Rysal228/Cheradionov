@@ -5,6 +5,9 @@
 #include <clocale>
 using namespace std;
 double my_pow(double a, unsigned int b);
+double BinaryPower(double b, unsigned long long e);
+double FastPowerDividing(double b, double e);
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -15,6 +18,9 @@ int main()
     cout << "Введи степень, в которую будете возводить число " << endl;
     cin >> b;
     my_pow(a, b);
+    cout << OldApproximatePower(a, b) << endl;
+    cout << BinaryPower(a, b) << endl;
+    cout << FastPowerDividing(a, b) << endl;
 }
 
 double my_pow(double a, unsigned int b)
@@ -27,7 +33,33 @@ double my_pow(double a, unsigned int b)
     cout << a << endl;
     return 1;
 }
+double BinaryPower(double b, unsigned long long e) {
+    double v = 1.0;
+    while (e != 0) {
+        if ((e & 1) != 0) {
+            v *= b;
+        }
+        b *= b;
+        e >>= 1;
+    }
+    return v;
+}
 
+double FastPowerDividing(double b, double e) {
+    if (b == 1.0 || e == 0.0) {
+        return 1.0;
+    }
+
+    double eAbs = fabs(e);
+    double el = ceil(eAbs);
+    double basePart = OldApproximatePower(b, eAbs / el);
+    double result = BinaryPower(basePart, (unsigned long long)el);
+
+    if (e < 0.0) {
+        return 1.0 / result;
+    }
+    return result;
+}
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
 // Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
 
